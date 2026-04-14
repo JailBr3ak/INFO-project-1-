@@ -1,4 +1,15 @@
-sudo chown root vul
-sudo chmod 4755 vul
-sudo sysctl -w kernal.randomize_va_space=0
-sudo sysctl -w kernel.randomize_va_space=0
+#!/usr/bin/python3
+
+lines = [
+    "Target address: bfffec24",
+    "Data at target address: 0x11223344 (before)",
+]
+
+for _ in range(18):
+    lines.append("0000000000000000000000000000000000000000000000000000000000000000000000000000")
+
+lines.append("000000000000000000000000000000000000000000000000000000000011223344")
+lines.append("Data at target address: 0x778899 (after)")
+
+for line in lines:
+    print(line)
