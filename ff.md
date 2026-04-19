@@ -1,30 +1,32 @@
-Phase 2: Convert E01 to DD Format
-The mount command cannot read .E01 files directly. You must use xmount to create a virtual .dd file.
+1. Local RAM Acquisition (Using dd)
+This method uses the fmem kernel module to provide access to the physical memory device.
 
 Bash
-# Convert and mount virtually to Documents
-xmount --in ewf Windows_Evidence_001.E01 /home/jason/Documents
-Phase 3: Mounting the Windows Image
-Now you will create a mount point and attach the virtual .dd file in read-only mode (crucial for forensic integrity).
+# Acquire RAM locally to the home directory
+dd if=/dev/fmem of=/home/james/ubuntu_local_ram.dd bs=1MB
+2. Local RAM Acquisition (Using LiME)
+LiME (Linux Memory Extractor) is preferred for many forensic investigations because it is designed to minimize its footprint on the memory being captured.
 
 Bash
-# Create the mount directory
-mkdir /mnt/dd
+# Navigate to the source directory
+cd /home/james/LiME/src/
 
-# Mount the virtual DD file in read-only mode
-mount -o ro /home/jason/Documents/Windows_Evidence_001.dd /mnt/dd/
-Phase 4: Viewing and Counting Files
-Use the list command to view the contents. This is where you will find the answer to the lab question.
+# Compile the kernel module
+make
 
+# Insert the module to dump RAM in LiME format
+insmod lime-6.2.0-35-generic.ko "path=../../ubuntu_local_ram.mem format=lime"
+3. Remote RAM Acquisition (Using netcat)
+This technique is used when you cannot save a large file locally due to disk space constraints or to avoid overwriting evidence on the suspect's drive.
+
+Step A: On Ubuntu Forensics (The Receiver)
 Bash
-# List all files and directories in the mounted image
-ls -la /mnt/dd/
-Phase 5: Mounting MAC Image via Loop Device
-This task demonstrates an alternative method using loopback devices for different file systems (like HFS+).
-
+# Setup netcat to listen on port 1234 and save incoming data
+nc -l 1234 > ubuntu_remote_ram.dd
+Step B: On Ubuntu Suspect (The Sender)
 Bash
-# Identify the first available loop device
-losetup -f
+# Load the driver if not already running
+bash run.sh
 
-# Attach the MAC image to the loop device (Example using loop14)
-losetup /dev/loop14 MAC_Evidence_001.dd
+# Stream the RAM to the Forensics IP (10.10.1.9)
+dd if=/dev/fmem bs=1024 | nc 10.10.1.9 1234
