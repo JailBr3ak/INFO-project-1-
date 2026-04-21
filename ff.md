@@ -1,7 +1,3 @@
-cd C:\Windows\system32
+upx.exe -d -o "E:\CHFI-Tools\Evidence Files\Unpacked.exe" "E:\CHFI-Tools\Evidence Files\Infected.exe"
 
-gci -recurse | % { gi $_.FullName -stream * } | where stream -ne ':$Data'
-
-get-content -path C:\Windows\system32\simple_file1.txt -stream secret_file1.txt
-
-get-content -path C:\Windows\system32\simple_file2.txt -stream secret_file2.txt
+Result: Infected.exe is unpacked and saved as E:\CHFI-Tools\Evidence Files\Unpacked.exe.
