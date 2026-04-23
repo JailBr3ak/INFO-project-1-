@@ -1,3 +1,18 @@
-upx.exe -d -o "E:\CHFI-Tools\Evidence Files\Unpacked.exe" "E:\CHFI-Tools\Evidence Files\Infected.exe"
+1. Disable Symbolic Link Protections
 
-Result: Infected.exe is unpacked and saved as E:\CHFI-Tools\Evidence Files\Unpacked.exe.
+sudo sysctl -w fs.protected_symlinks=0
+sudo sysctl -w fs.protected_regular=0
+
+2. Compile the Vulnerable Program
+
+gcc vulp.c -o vulp
+
+3. Set Root Ownership and Set-UID Bit
+
+sudo chown root vulp
+
+sudo chmod 4755 vulp
+
+4. Verify the Setup
+
+ls -l vulp
